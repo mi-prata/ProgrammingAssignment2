@@ -1,15 +1,40 @@
-## Put comments here that give an overall description of what your
-## functions do
+#### Matrix inversion with caching
 
-## TESTE TESTE TESTE
+###A test matrix can be created by
+###c<-1:2
+###d<-2:1
+###test<-rbind(c,d)
+###the inverse is 1/3(c,d) with the ones being -1 instead of 1.
 
-makeCacheMatrix <- function(x = matrix()) {
-
+####Takes an argument x of matrix type and returns a list of 4 
+####functions.
+makeCacheMatrix <- function(x = matrix()) 
+{
+        m <- NULL
+        set <- function(y) {
+                x <<- y
+                m <<- NULL
+        }
+        get <- function() x
+        setinverse <- function(solve) m <<- solve
+        getinverse <- function() m
+                
+        list(set = set, get = get,
+             setinverse = setinverse,
+             getinverse = getinverse)      
 }
 
-
-## Write a short comment describing this function
-
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+###Computes inverse matrix or returns a cached inverse.
+cacheSolve <- function(x, ...) 
+{       ###If there an inverse matrix in cache returns it
+        m <- x$getinverse()
+        if(!is.null(m)) {
+                message("getting cached data")
+                return(m)
+        }
+        ###Else, gets the matrix and computes its inverse
+        data <- x$get()
+        m <- solve(data, ...)
+        x$setinverse(m)
+        m        
 }
